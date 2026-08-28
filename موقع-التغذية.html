@@ -1,0 +1,1022 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sehety | صحتي - القيم الغذائية الكاملة وحاسبة BMI</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%8D%BD%EF%B8%8F%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800;900&family=Cairo:wght@500;700;800;900&family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --red: #C8102E;
+    --red-bright: #E11D3C;
+    --red-deep: #7A0C1F;
+    --red-mid: #A61B32;
+    --gold: #D9A441;
+    --pink: #F3B6C0;
+    --soft: #FBE7EA;
+    --softer: #FDF3F4;
+    --white: #FFFFFF;
+    --ink: #221415;
+    --gray: #837374;
+    --line: #F1DEE0;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    font-family:'Tajawal', sans-serif;
+    background: var(--white);
+    color: var(--ink);
+    overflow-x:hidden;
+  }
+  h1,h2,h3,.display{ font-family:'Cairo', sans-serif; }
+  ::selection{ background: var(--pink); color:var(--red-deep); }
+
+  /* ===================== NAVBAR / LOGO ===================== */
+  .navbar{
+    position:sticky; top:0; z-index:60; background:rgba(255,255,255,.92); backdrop-filter:blur(8px);
+    border-bottom:1px solid transparent; transition: box-shadow .2s ease, border-color .2s ease;
+  }
+  .navbar.scrolled{ box-shadow: 0 8px 24px rgba(122,12,31,.10); border-color: var(--line); }
+  .navbar-inner{
+    max-width:1120px; margin:0 auto; padding:12px 20px; display:flex; align-items:center; justify-content:space-between;
+  }
+  .logo-lockup{ display:flex; align-items:center; gap:11px; cursor:pointer; user-select:none; }
+  .logo-mark{
+    width:40px; height:40px; border-radius:11px; flex-shrink:0;
+    background: linear-gradient(135deg, var(--red-bright), var(--red-deep));
+    display:flex; align-items:center; justify-content:center; font-size:19px;
+    box-shadow: 0 6px 14px rgba(200,16,46,.35);
+  }
+  .logo-text{ display:flex; flex-direction:column; line-height:1; }
+  .logo-en{
+    font-family:'Playfair Display', serif; font-weight:900; font-size:26px; color:var(--red);
+    letter-spacing:.3px;
+  }
+  .logo-ar{ font-family:'Cairo'; font-weight:700; font-size:11px; color:var(--gray); margin-top:3px; letter-spacing:1px; }
+  .navbar-tag{ font-size:12px; color:var(--gray); display:none; }
+  @media (min-width:640px){ .navbar-tag{ display:block; } }
+
+  /* ===================== HERO / PULSE BACKGROUND ===================== */
+  .topband{
+    background: linear-gradient(160deg, var(--red-deep) 0%, var(--red) 55%, var(--red-mid) 100%);
+    color:#fff;
+    padding: 44px 20px 92px;
+    text-align:center;
+    position:relative;
+    overflow:hidden;
+  }
+  .pulse-bg{ position:absolute; inset:0; width:100%; height:100%; opacity:.35; }
+  .pulse-line{ fill:none; stroke:rgba(255,255,255,.85); stroke-width:2; stroke-dasharray: 8 6; animation: dash 3.2s linear infinite; }
+  .pulse-line.slow{ stroke:rgba(255,255,255,.35); stroke-width:1.4; animation-duration:5s; }
+  @keyframes dash{ to{ stroke-dashoffset: -280; } }
+  .grain{
+    position:absolute; inset:0; opacity:.05; mix-blend-mode:overlay; pointer-events:none;
+    background-image: radial-gradient(circle at 20% 30%, #fff 0, transparent 1.2px), radial-gradient(circle at 70% 60%, #fff 0, transparent 1.2px);
+    background-size: 26px 26px;
+  }
+
+  .plate-mark{
+    width:72px; height:72px; margin:0 auto 14px; border-radius:50%;
+    border: 4px solid rgba(255,255,255,.85); display:flex; align-items:center; justify-content:center;
+    font-size:30px; position:relative; z-index:1; background: rgba(255,255,255,.08);
+    box-shadow: 0 0 0 8px rgba(255,255,255,.06);
+  }
+  .topband h1{ font-size: clamp(28px, 5vw, 44px); font-weight:900; position:relative; z-index:1; letter-spacing:.5px; }
+  .topband p{ margin-top:10px; font-size:15px; opacity:.92; position:relative; z-index:1; max-width:500px; margin-inline:auto; }
+
+  .energy-key{
+    position:relative; z-index:1; display:inline-flex; gap:16px; flex-wrap:wrap; justify-content:center;
+    margin-top:22px; padding:10px 18px; border-radius:30px; background:rgba(255,255,255,.14); backdrop-filter:blur(2px);
+    font-size:12px; border:1px solid rgba(255,255,255,.2);
+  }
+  .energy-key span{ display:flex; align-items:center; gap:6px; }
+  .key-dot{ width:10px; height:10px; border-radius:50%; display:inline-block; }
+
+  .stat-strip{
+    position:relative; z-index:1; display:flex; gap:28px; justify-content:center; flex-wrap:wrap; margin-top:26px;
+  }
+  .stat-strip div{ text-align:center; }
+  .stat-strip b{ display:block; font-family:'Cairo'; font-size:22px; font-weight:900; }
+  .stat-strip span{ font-size:11px; opacity:.85; }
+
+  .wrap{ max-width: 1120px; margin: 0 auto; padding: 0 18px; }
+
+  /* ===================== HOME CARDS ===================== */
+  .home-cards{
+    display:grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 18px;
+    margin: -48px auto 44px; position:relative; z-index:2; max-width: 1080px; padding: 0 18px;
+  }
+  @media (max-width:640px){ .home-cards{ grid-template-columns: repeat(2, 1fr); gap:12px; } }
+
+  .action-card{
+    background:#fff; border: 1px solid var(--line); border-radius: 20px; padding: 26px 18px; text-align:center;
+    cursor:pointer; box-shadow: 0 16px 34px rgba(122,12,31,.13);
+    transition: transform .18s ease, box-shadow .18s ease; position:relative; overflow:hidden;
+  }
+  .action-card::after{
+    content:""; position:absolute; right:0; bottom:0; left:0; height:4px;
+    background: linear-gradient(90deg, transparent, var(--red), transparent); background-size: 200% 100%;
+    animation: sweep 2.6s linear infinite;
+  }
+  @keyframes sweep{ from{background-position:200% 0;} to{background-position:-200% 0;} }
+  .action-card:hover{ transform: translateY(-6px); box-shadow: 0 22px 40px rgba(122,12,31,.18); }
+  .action-card:focus-visible{ outline: 3px solid var(--red); outline-offset:3px; }
+  .action-icon{
+    width:54px; height:54px; border-radius:16px; background: var(--soft);
+    display:flex; align-items:center; justify-content:center; font-size:25px; margin: 0 auto 12px;
+  }
+  .action-card h3{ font-size:16px; color:var(--red-deep); margin-bottom:6px; }
+  .action-card span{ color:var(--gray); font-size:12.5px; line-height:1.5; }
+
+  /* ===================== GENDER TOGGLE / MISC CALC UI ===================== */
+  .gender-toggle{ display:flex; gap:10px; }
+  .gender-toggle button{
+    flex:1; font-family:'Cairo'; font-weight:700; font-size:14px; padding:11px; border-radius:12px;
+    border:1.5px solid var(--line); background:#fff; color:var(--gray); cursor:pointer; transition:all .15s ease;
+  }
+  .gender-toggle button.active{ background:var(--red); color:#fff; border-color:var(--red); }
+
+  .field select{
+    width:100%; padding:12px 14px; border-radius:12px; border:1px solid #E9CBCF;
+    font-family:'Tajawal'; font-size:15px; background:#fff; color:var(--ink);
+  }
+  .field select:focus{ outline:2px solid var(--red); border-color:var(--red); }
+
+  .result-mini-grid{ display:flex; gap:10px; flex-wrap:wrap; justify-content:center; margin-top:20px; width:100%; }
+  .mini-stat{ background:#fff; border:1px solid var(--line); border-radius:14px; padding:12px 16px; text-align:center; flex:1; min-width:110px; }
+  .mini-stat b{ display:block; font-family:'Cairo'; font-size:18px; color:var(--red-deep); }
+  .mini-stat span{ font-size:11px; color:var(--gray); }
+
+  .compare-select-row{ display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:18px; }
+  @media (max-width:560px){ .compare-select-row{ grid-template-columns:1fr; } }
+  .compare-table{ width:100%; border-collapse:collapse; background:#fff; border-radius:16px; overflow:hidden; border:1px solid var(--line); }
+  .compare-table th{ font-family:'Cairo'; font-size:13px; padding:12px; background:var(--softer); color:var(--red-deep); }
+  .compare-table td{ padding:11px 12px; text-align:center; font-size:13.5px; border-top:1px solid var(--line); }
+  .compare-table td.lbl{ text-align:right; color:var(--gray); font-size:12.5px; }
+  .compare-table td.hi{ color:var(--red-bright); font-weight:700; }
+  .compare-emoji-head{ font-size:20px; }
+
+  .energy-divider{
+    height:2px; margin: 6px 0 30px; border-radius:2px;
+    background: linear-gradient(90deg, transparent, var(--red) 20%, var(--red-deep) 50%, var(--red) 80%, transparent);
+    background-size: 200% 100%; animation: sweep 4s linear infinite; opacity:.55;
+  }
+
+  .view{ display:none; padding: 34px 0 60px; animation: fadeIn .25s ease; }
+  .view.active{ display:block; }
+  @keyframes fadeIn{ from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:translateY(0);} }
+
+  .back-btn{
+    background:none; border:1px solid #E9CBCF; color:var(--red-deep); font-family:'Tajawal'; font-size:14px;
+    padding:9px 16px; border-radius:30px; cursor:pointer; margin-bottom:22px;
+  }
+  .back-btn:hover{ background:var(--softer); }
+
+  .view h2{ font-size:25px; color:var(--red-deep); margin-bottom:4px; }
+  .view .sub{ color:var(--gray); font-size:14px; margin-bottom:6px; }
+
+  /* ===================== SEARCH ===================== */
+  .search-row{ position:relative; margin: 18px 0 20px; }
+  .search-row input{
+    width:100%; padding:14px 46px 14px 18px; border-radius:14px; border:1.5px solid var(--line);
+    font-family:'Tajawal'; font-size:15px; background:#fff; transition: border-color .15s ease, box-shadow .15s ease;
+  }
+  .search-row input:focus{ outline:none; border-color:var(--red); box-shadow: 0 0 0 4px var(--softer); }
+  .search-row::before{
+    content:"🔍"; position:absolute; right:16px; top:50%; transform:translateY(-50%); font-size:15px; opacity:.6;
+  }
+  .no-results{ text-align:center; color:var(--gray); padding: 40px 0; font-size:14px; }
+
+  /* ===================== TABS ===================== */
+  .tabs{ display:flex; gap:10px; flex-wrap:wrap; margin-bottom:8px; }
+  .tab{
+    font-family:'Cairo'; font-weight:700; font-size:13.5px; background: var(--softer); color: var(--red-deep);
+    border: 1px solid transparent; padding: 9px 16px; border-radius: 30px; cursor:pointer; transition: all .15s ease;
+    display:flex; align-items:center; gap:6px;
+  }
+  .tab .count{ background:rgba(0,0,0,.08); border-radius:20px; padding:1px 7px; font-size:11px; }
+  .tab.active{ background: var(--red); color:#fff; box-shadow: 0 6px 14px rgba(200,16,46,.30); }
+  .tab.active .count{ background:rgba(255,255,255,.25); }
+  .tab:hover:not(.active){ border-color: var(--red); }
+
+  /* ===================== FOOD GRID / CARD ===================== */
+  .food-grid{ display:grid; grid-template-columns: repeat(auto-fill, minmax(272px, 1fr)); gap:18px; margin-top:18px; }
+  .food-card{
+    border: 1px solid var(--line); border-radius: 18px; padding: 0; background: #fff;
+    box-shadow: 0 4px 14px rgba(122,12,31,.06); overflow:hidden; position:relative;
+    opacity:0; transform: translateY(10px); animation: cardIn .45s ease forwards;
+    transition: box-shadow .2s ease, transform .2s ease;
+  }
+  .food-card:hover{ box-shadow: 0 16px 30px rgba(122,12,31,.14); transform: translateY(-3px); }
+  @keyframes cardIn{ to{ opacity:1; transform:translateY(0); } }
+
+  .food-top{ padding: 18px 18px 14px; }
+  .food-head{ display:flex; align-items:center; gap:12px; margin-bottom:10px; }
+  .food-emoji{ font-size:27px; }
+  .food-name{ font-family:'Cairo'; font-weight:700; font-size:16px; }
+  .food-cat{ color:var(--gray); font-size:11.5px; }
+
+  .badge-row{ display:flex; gap:6px; flex-wrap:wrap; margin-bottom:12px; min-height:22px; }
+  .badge{ font-size:10.5px; font-family:'Cairo'; font-weight:700; padding:3px 9px; border-radius:20px; }
+  .badge.energy{ background:#FCE9EA; color:var(--red-deep); }
+  .badge.protein{ background:#FDEDEF; color:var(--red-bright); }
+  .badge.light{ background:#EFF7EE; color:#2E7D32; }
+  .badge.sugar{ background:#FFF4E0; color:#B4740E; }
+
+  .energy-bar-row{ margin-bottom:14px; }
+  .energy-bar-label{ display:flex; justify-content:space-between; font-size:11px; color:var(--gray); margin-bottom:4px; }
+  .energy-bar-track{ height:6px; border-radius:6px; background: var(--softer); overflow:hidden; }
+  .energy-bar-fill{ height:100%; border-radius:6px; background: linear-gradient(90deg, var(--red-bright), var(--red-deep)); }
+
+  .ring-row{ display:flex; align-items:center; gap:16px; margin-bottom:14px; }
+  .ring{ width:78px; height:78px; border-radius:50%; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+  .ring-inner{ width:56px; height:56px; border-radius:50%; background:#fff; display:flex; flex-direction:column; align-items:center; justify-content:center; }
+  .ring-inner b{ font-size:13px; color:var(--red-deep); font-family:'Cairo'; }
+  .ring-inner small{ font-size:8.5px; color:var(--gray); }
+
+  .legend{ font-size:12px; }
+  .legend div{ display:flex; align-items:center; gap:6px; margin-bottom:4px; }
+  .dot{ width:9px; height:9px; border-radius:50%; display:inline-block; flex-shrink:0; }
+  .dot.protein{ background: var(--red-bright); }
+  .dot.fat{ background: var(--pink); }
+  .dot.carbs{ background: var(--red-deep); }
+
+  .macro-mini{ display:flex; gap:10px; flex-wrap:wrap; font-size:11px; color:var(--gray); border-top:1px dashed var(--line); padding-top:10px; }
+  .macro-mini b{ color:var(--ink); }
+
+  .toggle-btn{
+    width:100%; border:none; background: var(--softer); color:var(--red-deep); font-family:'Cairo'; font-weight:700;
+    font-size:12.5px; padding:11px; cursor:pointer; border-top: 1px solid var(--line);
+  }
+  .toggle-btn:hover{ background: var(--soft); }
+
+  .detail-panel{ display:none; padding: 14px 18px 18px; background: #FFFCFC; }
+  .detail-panel.open{ display:block; }
+  .detail-title{ font-size:11.5px; color:var(--gray); margin: 10px 0 6px; font-family:'Cairo'; font-weight:700; }
+  .detail-title:first-child{ margin-top:0; }
+  .chip-row{ display:flex; flex-wrap:wrap; gap:6px; }
+  .chip{ background: var(--soft); color:var(--red-deep); font-size:11px; padding:4px 10px; border-radius:20px; }
+  .chip.alt{ background:#F6EAEB; color:var(--ink); }
+
+  /* ===================== BMI VIEW ===================== */
+  .bmi-box{
+    background: var(--softer); border-radius: 22px; padding: 32px; display:grid;
+    grid-template-columns: 1fr 1fr; gap: 30px; position:relative; overflow:hidden;
+  }
+  @media (max-width:640px){ .bmi-box{ grid-template-columns:1fr; } }
+
+  .field{ margin-bottom:18px; }
+  .field label{ display:block; font-size:13.5px; color:var(--red-deep); font-weight:700; margin-bottom:6px; font-family:'Cairo'; }
+  .field input{
+    width:100%; padding:12px 14px; border-radius:12px; border:1px solid #E9CBCF;
+    font-family:'Tajawal'; font-size:15px; background:#fff;
+  }
+  .field input:focus{ outline:2px solid var(--red); border-color:var(--red); }
+
+  .calc-btn{
+    width:100%; padding:13px; border:none; border-radius:12px; background: var(--red); color:#fff;
+    font-family:'Cairo'; font-weight:700; font-size:15px; cursor:pointer; margin-top:6px;
+  }
+  .calc-btn:hover{ background: var(--red-deep); }
+
+  .result-area{ display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; }
+  .result-number{ font-family:'Cairo'; font-weight:900; font-size:54px; color:var(--red-deep); line-height:1; }
+  .result-label{ font-family:'Cairo'; font-weight:700; font-size:16px; margin-top:8px; padding:6px 18px; border-radius:20px; }
+  .gauge{
+    width:100%; max-width:280px; height:12px; border-radius:10px; margin-top:22px; position:relative;
+    background: linear-gradient(90deg,var(--pink) 0%, var(--red) 33%, var(--red-deep) 66%, #4a0713 100%);
+  }
+  .gauge-marker{ position:absolute; top:-6px; width:4px; height:24px; background: var(--ink); border-radius:3px; transform:translateX(50%); transition: right .3s ease; }
+  .gauge-note{ font-size:12px; color:var(--gray); margin-top:8px; }
+  .placeholder-note{ color:var(--gray); font-size:14px; }
+
+  .disclaimer{ max-width:1120px; margin: 10px auto 0; padding: 14px 18px; font-size:12px; color:var(--gray); border-top:1px dashed var(--line); }
+  footer{ text-align:center; padding:22px; color:var(--gray); font-size:12.5px; }
+</style>
+</head>
+<body>
+
+<header class="navbar" id="navbar">
+  <div class="navbar-inner">
+    <div class="logo-lockup" onclick="showView('home')" tabindex="0" onkeypress="if(event.key==='Enter')showView('home')">
+      <div class="logo-mark">🍽️</div>
+      <div class="logo-text">
+        <span class="logo-en">Sehety</span>
+        <span class="logo-ar">صحتي</span>
+      </div>
+    </div>
+    <div class="navbar-tag">دليلك الغذائي الشامل</div>
+  </div>
+</header>
+
+<div class="topband">
+  <svg class="pulse-bg" viewBox="0 0 800 200" preserveAspectRatio="none">
+    <path class="pulse-line slow" d="M0,150 L120,150 L140,90 L165,180 L190,40 L210,150 L800,150"/>
+    <path class="pulse-line" d="M0,60 L100,60 L120,20 L145,110 L170,60 L800,60"/>
+  </svg>
+  <div class="grain"></div>
+  <div class="plate-mark">🍽️</div>
+  <h1>غذاؤك</h1>
+  <p>دليلك الشامل للقيم الغذائية الكاملة، وحاسبة كتلة الجسم في مكان واحد</p>
+  <div class="energy-key">
+    <span><span class="key-dot" style="background:var(--red-bright)"></span> بروتين</span>
+    <span><span class="key-dot" style="background:var(--pink)"></span> دسم</span>
+    <span><span class="key-dot" style="background:#4a0713"></span> كربوهيدرات</span>
+    <span>／ الخط المتحرك = الطاقة (سعرات حرارية)</span>
+  </div>
+  <div class="stat-strip" id="stat-strip"></div>
+</div>
+
+<div class="home-cards">
+  <div class="action-card" tabindex="0" onclick="showView('food')" onkeypress="if(event.key==='Enter')showView('food')">
+    <div class="action-icon">📊</div>
+    <h3>إحصائيات الطعام الكاملة</h3>
+    <span>سعرات، بروتين، دسم، كربوهيدرات، ألياف، فيتامينات ومعادن لكل صنف</span>
+  </div>
+  <div class="action-card" tabindex="0" onclick="showView('bmi')" onkeypress="if(event.key==='Enter')showView('bmi')">
+    <div class="action-icon">⚖️</div>
+    <h3>حاسبة BMI</h3>
+    <span>اعرف مؤشر كتلة جسمك خلال ثوانٍ من الوزن والطول</span>
+  </div>
+  <div class="action-card" tabindex="0" onclick="showView('bmr')" onkeypress="if(event.key==='Enter')showView('bmr')">
+    <div class="action-icon">🔥</div>
+    <h3>السعرات اليومية</h3>
+    <span>احسب احتياجك اليومي من السعرات (BMR/TDEE) حسب نشاطك</span>
+  </div>
+  <div class="action-card" tabindex="0" onclick="showView('compare')" onkeypress="if(event.key==='Enter')showView('compare')">
+    <div class="action-icon">🔄</div>
+    <h3>مقارنة الأطعمة</h3>
+    <span>قارن بين صنفين غذائيين جنباً إلى جنب في كل القيم</span>
+  </div>
+  <div class="action-card" tabindex="0" onclick="showView('water')" onkeypress="if(event.key==='Enter')showView('water')">
+    <div class="action-icon">💧</div>
+    <h3>حاسبة الماء اليومي</h3>
+    <span>اعرف احتياجك اليومي من الماء حسب وزنك ونشاطك</span>
+  </div>
+  <div class="action-card" tabindex="0" onclick="showView('bodyfat')" onkeypress="if(event.key==='Enter')showView('bodyfat')">
+    <div class="action-icon">📉</div>
+    <h3>نسبة دهون الجسم</h3>
+    <span>تقدير تقريبي لنسبة الدهون في جسمك</span>
+  </div>
+  <div class="action-card" tabindex="0" onclick="showView('ideal')" onkeypress="if(event.key==='Enter')showView('ideal')">
+    <div class="action-icon">🎯</div>
+    <h3>الوزن المثالي</h3>
+    <span>اعرف المدى الصحي لوزنك بناءً على طولك</span>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <!-- FOOD STATS VIEW -->
+  <div class="view" id="view-food">
+    <button class="back-btn" onclick="showView('home')">→ الرئيسية</button>
+    <h2>إحصائيات الطعام</h2>
+    <div class="sub">القيم لكل 100 غرام (قيم مرجعية تقريبية معتمدة على قواعد بيانات غذائية معروفة)</div>
+    <div class="energy-divider"></div>
+
+    <div class="search-row"><input type="text" id="search" placeholder="ابحث عن صنف غذائي... مثال: تفاح، دجاج، لوز"></div>
+
+    <div class="tabs" id="tabs"></div>
+    <div class="food-grid" id="food-grid"></div>
+    <div class="no-results" id="no-results" style="display:none;">لا توجد نتائج مطابقة لبحثك 🔍</div>
+  </div>
+
+  <!-- BMI VIEW -->
+  <div class="view" id="view-bmi">
+    <button class="back-btn" onclick="showView('home')">→ الرئيسية</button>
+    <h2>حاسبة مؤشر كتلة الجسم (BMI)</h2>
+    <div class="sub">أدخل وزنك وطولك لمعرفة تصنيفك الصحي</div>
+    <div class="energy-divider"></div>
+
+    <div class="bmi-box">
+      <div>
+        <div class="field"><label>الوزن (كجم)</label><input type="number" id="weight" placeholder="مثال: 70" min="1"></div>
+        <div class="field"><label>الطول (سم)</label><input type="number" id="height" placeholder="مثال: 170" min="1"></div>
+        <button class="calc-btn" onclick="calcBMI()">احسب المؤشر</button>
+      </div>
+      <div class="result-area">
+        <div id="bmi-placeholder" class="placeholder-note">النتيجة ستظهر هنا بعد الحساب</div>
+        <div id="bmi-result" style="display:none; width:100%;">
+          <div class="result-number" id="bmi-value">0.0</div>
+          <div class="result-label" id="bmi-label">—</div>
+          <div class="gauge"><div class="gauge-marker" id="gauge-marker" style="right:0%"></div></div>
+          <div class="gauge-note">نقص &nbsp;·&nbsp; طبيعي &nbsp;·&nbsp; زيادة &nbsp;·&nbsp; سمنة</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BMR / TDEE VIEW -->
+  <div class="view" id="view-bmr">
+    <button class="back-btn" onclick="showView('home')">→ الرئيسية</button>
+    <h2>حاسبة السعرات اليومية (BMR / TDEE)</h2>
+    <div class="sub">اعرف احتياجك اليومي من السعرات حسب معدل الأيض ومستوى نشاطك</div>
+    <div class="energy-divider"></div>
+
+    <div class="bmi-box">
+      <div>
+        <div class="field"><label>الجنس</label>
+          <div class="gender-toggle">
+            <button type="button" id="bmr-male" class="active" onclick="setGender('bmr','male')">ذكر</button>
+            <button type="button" id="bmr-female" onclick="setGender('bmr','female')">أنثى</button>
+          </div>
+        </div>
+        <div class="field"><label>الوزن (كجم)</label><input type="number" id="bmr-weight" placeholder="مثال: 70"></div>
+        <div class="field"><label>الطول (سم)</label><input type="number" id="bmr-height" placeholder="مثال: 170"></div>
+        <div class="field"><label>العمر (سنة)</label><input type="number" id="bmr-age" placeholder="مثال: 25"></div>
+        <div class="field"><label>مستوى النشاط</label>
+          <select id="bmr-activity">
+            <option value="1.2">خامل (بدون رياضة)</option>
+            <option value="1.375">نشاط خفيف (1-3 أيام/أسبوع)</option>
+            <option value="1.55">نشاط متوسط (3-5 أيام/أسبوع)</option>
+            <option value="1.725">نشاط عالٍ (6-7 أيام/أسبوع)</option>
+            <option value="1.9">نشاط عالٍ جداً (رياضي/عمل بدني)</option>
+          </select>
+        </div>
+        <button class="calc-btn" onclick="calcBMR()">احسب السعرات</button>
+      </div>
+      <div class="result-area">
+        <div id="bmr-placeholder" class="placeholder-note">النتيجة ستظهر هنا بعد الحساب</div>
+        <div id="bmr-result" style="display:none; width:100%;">
+          <div class="result-number" id="bmr-value">0</div>
+          <div class="result-label" id="bmr-label" style="background:var(--soft); color:var(--red-deep);">سعرة/يوم للحفاظ على الوزن</div>
+          <div class="result-mini-grid">
+            <div class="mini-stat"><b id="bmr-loss">0</b><span>لخسارة الوزن</span></div>
+            <div class="mini-stat"><b id="bmr-base">0</b><span>معدل الأيض BMR</span></div>
+            <div class="mini-stat"><b id="bmr-gain">0</b><span>لزيادة الوزن</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- COMPARE FOODS VIEW -->
+  <div class="view" id="view-compare">
+    <button class="back-btn" onclick="showView('home')">→ الرئيسية</button>
+    <h2>مقارنة الأطعمة</h2>
+    <div class="sub">اختر صنفين لمقارنة قيمهما الغذائية لكل 100 غرام</div>
+    <div class="energy-divider"></div>
+
+    <div class="compare-select-row">
+      <div class="field"><label>الصنف الأول</label><select id="compare-a"></select></div>
+      <div class="field"><label>الصنف الثاني</label><select id="compare-b"></select></div>
+    </div>
+    <button class="calc-btn" style="max-width:220px; margin:0 auto 26px; display:block;" onclick="doCompare()">قارن الآن</button>
+
+    <div id="compare-result"></div>
+  </div>
+
+  <!-- WATER VIEW -->
+  <div class="view" id="view-water">
+    <button class="back-btn" onclick="showView('home')">→ الرئيسية</button>
+    <h2>حاسبة الماء اليومي</h2>
+    <div class="sub">اعرف كميّة الماء التي يحتاجها جسمك يومياً</div>
+    <div class="energy-divider"></div>
+
+    <div class="bmi-box">
+      <div>
+        <div class="field"><label>الوزن (كجم)</label><input type="number" id="water-weight" placeholder="مثال: 70"></div>
+        <div class="field"><label>مستوى النشاط</label>
+          <select id="water-activity">
+            <option value="30">خامل (نشاط قليل)</option>
+            <option value="35">متوسط (نشاط عادي)</option>
+            <option value="40">نشيط (تمارين/جو حار)</option>
+          </select>
+        </div>
+        <button class="calc-btn" onclick="calcWater()">احسب الاحتياج</button>
+      </div>
+      <div class="result-area">
+        <div id="water-placeholder" class="placeholder-note">النتيجة ستظهر هنا بعد الحساب</div>
+        <div id="water-result" style="display:none; width:100%;">
+          <div class="result-number" id="water-value">0</div>
+          <div class="result-label" style="background:var(--soft); color:var(--red-deep);">لتر يومياً</div>
+          <div class="gauge-note" style="margin-top:14px;" id="water-cups"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BODY FAT VIEW -->
+  <div class="view" id="view-bodyfat">
+    <button class="back-btn" onclick="showView('home')">→ الرئيسية</button>
+    <h2>نسبة دهون الجسم (تقديرية)</h2>
+    <div class="sub">تقدير عام لنسبة الدهون بناءً على مؤشر كتلة الجسم والعمر والجنس</div>
+    <div class="energy-divider"></div>
+
+    <div class="bmi-box">
+      <div>
+        <div class="field"><label>الجنس</label>
+          <div class="gender-toggle">
+            <button type="button" id="bf-male" class="active" onclick="setGender('bf','male')">ذكر</button>
+            <button type="button" id="bf-female" onclick="setGender('bf','female')">أنثى</button>
+          </div>
+        </div>
+        <div class="field"><label>الوزن (كجم)</label><input type="number" id="bf-weight" placeholder="مثال: 70"></div>
+        <div class="field"><label>الطول (سم)</label><input type="number" id="bf-height" placeholder="مثال: 170"></div>
+        <div class="field"><label>العمر (سنة)</label><input type="number" id="bf-age" placeholder="مثال: 25"></div>
+        <button class="calc-btn" onclick="calcBodyFat()">احسب النسبة</button>
+      </div>
+      <div class="result-area">
+        <div id="bf-placeholder" class="placeholder-note">النتيجة ستظهر هنا بعد الحساب</div>
+        <div id="bf-result" style="display:none; width:100%;">
+          <div class="result-number" id="bf-value">0%</div>
+          <div class="result-label" id="bf-label">—</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- IDEAL WEIGHT VIEW -->
+  <div class="view" id="view-ideal">
+    <button class="back-btn" onclick="showView('home')">→ الرئيسية</button>
+    <h2>الوزن المثالي</h2>
+    <div class="sub">تقدير للوزن المناسب والمدى الصحي بناءً على طولك</div>
+    <div class="energy-divider"></div>
+
+    <div class="bmi-box">
+      <div>
+        <div class="field"><label>الجنس</label>
+          <div class="gender-toggle">
+            <button type="button" id="iw-male" class="active" onclick="setGender('iw','male')">ذكر</button>
+            <button type="button" id="iw-female" onclick="setGender('iw','female')">أنثى</button>
+          </div>
+        </div>
+        <div class="field"><label>الطول (سم)</label><input type="number" id="iw-height" placeholder="مثال: 170"></div>
+        <button class="calc-btn" onclick="calcIdeal()">احسب الوزن المثالي</button>
+      </div>
+      <div class="result-area">
+        <div id="iw-placeholder" class="placeholder-note">النتيجة ستظهر هنا بعد الحساب</div>
+        <div id="iw-result" style="display:none; width:100%;">
+          <div class="result-number" id="iw-value">0</div>
+          <div class="result-label" style="background:var(--soft); color:var(--red-deep);">كجم تقريباً</div>
+          <div class="gauge-note" id="iw-range" style="margin-top:14px;"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="disclaimer">
+  * القيم الغذائية تقريبية لكل 100 غرام من الطعام (نيء أو مطبوخ بحسب طبيعة الصنف) ومبنية على قواعد بيانات غذائية عامة، وقد تختلف حسب المصدر وطريقة التحضير والصنف المحدد. هذه الأداة إرشادية ولا تُغني عن استشارة أخصائي تغذية.
+</div>
+<footer>غذاؤك © 2026</footer>
+
+<script>
+  // ===== Real approximate nutrition data per 100g =====
+  const FOODS = {
+    "لحوم ومصادر بروتين": [
+      { name:"صدر دجاج (مطبوخ)", emoji:"🍗", cal:165, protein:31, fat:3.6, satFat:1, carbs:0, fiber:0, sugar:0,
+        vitamins:[{l:"B3",v:"13.7مغ"},{l:"B6",v:"0.6مغ"},{l:"B12",v:"0.3مكغ"}],
+        minerals:[{l:"فوسفور",v:"210مغ"},{l:"بوتاسيوم",v:"256مغ"},{l:"زنك",v:"1مغ"},{l:"سيلينيوم",v:"22مكغ"},{l:"صوديوم",v:"74مغ"}] },
+      { name:"ديك رومي (صدر مطبوخ)", emoji:"🍗", cal:135, protein:30, fat:1, satFat:0.3, carbs:0, fiber:0, sugar:0,
+        vitamins:[{l:"B3",v:"6.8مغ"},{l:"B6",v:"0.5مغ"},{l:"B12",v:"0.3مكغ"}],
+        minerals:[{l:"فوسفور",v:"200مغ"},{l:"بوتاسيوم",v:"249مغ"},{l:"سيلينيوم",v:"27مكغ"}] },
+      { name:"لحم بقري (مطبوخ)", emoji:"🥩", cal:254, protein:26, fat:15, satFat:6, carbs:0, fiber:0, sugar:0,
+        vitamins:[{l:"B12",v:"2.6مكغ"},{l:"B3",v:"4.8مغ"}],
+        minerals:[{l:"حديد",v:"2.6مغ"},{l:"زنك",v:"4.8مغ"},{l:"فوسفور",v:"158مغ"},{l:"بوتاسيوم",v:"270مغ"},{l:"سيلينيوم",v:"15مكغ"}] },
+      { name:"لحم عجل (مطبوخ)", emoji:"🥩", cal:172, protein:27, fat:6.7, satFat:2.6, carbs:0, fiber:0, sugar:0,
+        vitamins:[{l:"B12",v:"1.6مكغ"},{l:"B3",v:"8.4مغ"}],
+        minerals:[{l:"زنك",v:"3.9مغ"},{l:"فوسفور",v:"216مغ"},{l:"بوتاسيوم",v:"334مغ"}] },
+      { name:"لحم غنم (مطبوخ)", emoji:"🍖", cal:294, protein:25, fat:21, satFat:9, carbs:0, fiber:0, sugar:0,
+        vitamins:[{l:"B12",v:"2.6مكغ"},{l:"B3",v:"5.9مغ"}],
+        minerals:[{l:"حديد",v:"1.9مغ"},{l:"زنك",v:"4.4مغ"},{l:"فوسفور",v:"188مغ"},{l:"بوتاسيوم",v:"310مغ"}] },
+      { name:"سمك السلمون (مطبوخ)", emoji:"🐟", cal:208, protein:20, fat:13, satFat:3.1, carbs:0, fiber:0, sugar:0,
+        vitamins:[{l:"D",v:"11مكغ"},{l:"B12",v:"2.8مكغ"},{l:"B3",v:"8.5مغ"}],
+        minerals:[{l:"بوتاسيوم",v:"363مغ"},{l:"سيلينيوم",v:"36.5مكغ"},{l:"فوسفور",v:"240مغ"}] },
+      { name:"سمك التونة (معلب بالماء)", emoji:"🐟", cal:116, protein:26, fat:0.8, satFat:0.2, carbs:0, fiber:0, sugar:0,
+        vitamins:[{l:"B12",v:"2.2مكغ"},{l:"D",v:"1مكغ"},{l:"B3",v:"11.5مغ"}],
+        minerals:[{l:"سيلينيوم",v:"80مكغ"},{l:"صوديوم",v:"247مغ"},{l:"بوتاسيوم",v:"237مغ"}] },
+      { name:"سمك البلطي (مطبوخ)", emoji:"🐟", cal:128, protein:26, fat:2.7, satFat:0.9, carbs:0, fiber:0, sugar:0,
+        vitamins:[{l:"B12",v:"1.9مكغ"},{l:"B3",v:"4.7مغ"}],
+        minerals:[{l:"سيلينيوم",v:"54مكغ"},{l:"بوتاسيوم",v:"380مغ"},{l:"فوسفور",v:"204مغ"}] },
+      { name:"روبيان (مطبوخ)", emoji:"🦐", cal:99, protein:24, fat:0.3, satFat:0.1, carbs:0.2, fiber:0, sugar:0,
+        vitamins:[{l:"B12",v:"1.3مكغ"},{l:"E",v:"1.6مغ"}],
+        minerals:[{l:"سيلينيوم",v:"38مكغ"},{l:"فوسفور",v:"237مغ"},{l:"زنك",v:"1.3مغ"}] },
+      { name:"كبدة بقري (مطبوخة)", emoji:"🍽️", cal:135, protein:20, fat:3.6, satFat:1.2, carbs:3.9, fiber:0, sugar:0,
+        vitamins:[{l:"A",v:"9442مكغ"},{l:"B12",v:"70مكغ"},{l:"B2",v:"2.8مغ"},{l:"فولات",v:"145مكغ"}],
+        minerals:[{l:"حديد",v:"6.5مغ"},{l:"زنك",v:"4مغ"},{l:"نحاس",v:"9.8مغ"},{l:"فوسفور",v:"387مغ"}] },
+      { name:"بيض مسلوق", emoji:"🥚", cal:155, protein:13, fat:11, satFat:3.3, carbs:1.1, fiber:0, sugar:1.1,
+        vitamins:[{l:"A",v:"160مكغ"},{l:"D",v:"2مكغ"},{l:"B12",v:"0.89مكغ"},{l:"B2",v:"0.5مغ"}],
+        minerals:[{l:"سيلينيوم",v:"30مكغ"},{l:"فوسفور",v:"172مغ"},{l:"حديد",v:"1.2مغ"}] }
+    ],
+    "خضروات": [
+      { name:"سبانخ (نيء)", emoji:"🥬", cal:23, protein:2.9, fat:0.4, satFat:0.1, carbs:3.6, fiber:2.2, sugar:0.4,
+        vitamins:[{l:"A",v:"469مكغ"},{l:"C",v:"28مغ"},{l:"K",v:"483مكغ"},{l:"فولات",v:"194مكغ"}],
+        minerals:[{l:"حديد",v:"2.7مغ"},{l:"كالسيوم",v:"99مغ"},{l:"بوتاسيوم",v:"558مغ"},{l:"مغنيسيوم",v:"79مغ"}] },
+      { name:"بروكلي (نيء)", emoji:"🥦", cal:34, protein:2.8, fat:0.4, satFat:0.1, carbs:6.6, fiber:2.6, sugar:1.7,
+        vitamins:[{l:"C",v:"89مغ"},{l:"K",v:"102مكغ"},{l:"A",v:"31مكغ"},{l:"فولات",v:"63مكغ"}],
+        minerals:[{l:"كالسيوم",v:"47مغ"},{l:"بوتاسيوم",v:"316مغ"},{l:"حديد",v:"0.7مغ"}] },
+      { name:"قرنبيط (نيء)", emoji:"🥦", cal:25, protein:1.9, fat:0.3, satFat:0, carbs:5, fiber:2, sugar:1.9,
+        vitamins:[{l:"C",v:"48مغ"},{l:"K",v:"15.5مكغ"},{l:"فولات",v:"57مكغ"}],
+        minerals:[{l:"بوتاسيوم",v:"299مغ"}] },
+      { name:"جزر (نيء)", emoji:"🥕", cal:41, protein:0.9, fat:0.2, satFat:0, carbs:9.6, fiber:2.8, sugar:4.7,
+        vitamins:[{l:"A",v:"835مكغ"},{l:"C",v:"5.9مغ"},{l:"K",v:"13مكغ"}],
+        minerals:[{l:"بوتاسيوم",v:"320مغ"},{l:"كالسيوم",v:"33مغ"}] },
+      { name:"طماطم (نيء)", emoji:"🍅", cal:18, protein:0.9, fat:0.2, satFat:0, carbs:3.9, fiber:1.2, sugar:2.6,
+        vitamins:[{l:"C",v:"14مغ"},{l:"A",v:"42مكغ"},{l:"K",v:"7.9مكغ"}],
+        minerals:[{l:"بوتاسيوم",v:"237مغ"},{l:"كالسيوم",v:"10مغ"}] },
+      { name:"خيار (بقشره)", emoji:"🥒", cal:15, protein:0.7, fat:0.1, satFat:0, carbs:3.6, fiber:0.5, sugar:1.7,
+        vitamins:[{l:"K",v:"16.4مكغ"},{l:"C",v:"2.8مغ"}],
+        minerals:[{l:"بوتاسيوم",v:"147مغ"},{l:"مغنيسيوم",v:"13مغ"}] },
+      { name:"فلفل رومي أحمر (نيء)", emoji:"🫑", cal:31, protein:1, fat:0.3, satFat:0, carbs:6, fiber:2.1, sugar:4.2,
+        vitamins:[{l:"C",v:"128مغ"},{l:"A",v:"157مكغ"}],
+        minerals:[{l:"بوتاسيوم",v:"211مغ"}] },
+      { name:"باذنجان (مطبوخ)", emoji:"🍆", cal:35, protein:0.8, fat:0.2, satFat:0, carbs:8.7, fiber:2.5, sugar:3.2,
+        vitamins:[{l:"K",v:"3.5مكغ"},{l:"فولات",v:"14مكغ"}],
+        minerals:[{l:"بوتاسيوم",v:"123مغ"}] },
+      { name:"كوسا (نيء)", emoji:"🥒", cal:17, protein:1.2, fat:0.3, satFat:0, carbs:3.1, fiber:1, sugar:2.5,
+        vitamins:[{l:"C",v:"17.9مغ"},{l:"A",v:"10مكغ"}],
+        minerals:[{l:"بوتاسيوم",v:"261مغ"}] },
+      { name:"بصل (نيء)", emoji:"🧅", cal:40, protein:1.1, fat:0.1, satFat:0, carbs:9.3, fiber:1.7, sugar:4.2,
+        vitamins:[{l:"C",v:"7.4مغ"},{l:"B6",v:"0.1مغ"}],
+        minerals:[{l:"بوتاسيوم",v:"146مغ"}] },
+      { name:"فطر (نيء)", emoji:"🍄", cal:22, protein:3.1, fat:0.3, satFat:0, carbs:3.3, fiber:1, sugar:2,
+        vitamins:[{l:"B2",v:"0.4مغ"},{l:"B3",v:"3.6مغ"},{l:"D",v:"0.2مكغ"}],
+        minerals:[{l:"بوتاسيوم",v:"318مغ"},{l:"سيلينيوم",v:"9.3مكغ"},{l:"فوسفور",v:"86مغ"}] },
+      { name:"بطاطا (مسلوقة بقشرها)", emoji:"🥔", cal:87, protein:1.9, fat:0.1, satFat:0, carbs:20, fiber:1.8, sugar:0.9,
+        vitamins:[{l:"C",v:"13مغ"},{l:"B6",v:"0.3مغ"}],
+        minerals:[{l:"بوتاسيوم",v:"379مغ"},{l:"مغنيسيوم",v:"22مغ"}] },
+      { name:"بطاطا حلوة (مسلوقة)", emoji:"🍠", cal:90, protein:2, fat:0.1, satFat:0, carbs:21, fiber:3.3, sugar:6.5,
+        vitamins:[{l:"A",v:"961مكغ"},{l:"C",v:"19.6مغ"}],
+        minerals:[{l:"بوتاسيوم",v:"337مغ"},{l:"كالسيوم",v:"32مغ"}] }
+    ],
+    "فواكه": [
+      { name:"موز", emoji:"🍌", cal:89, protein:1.1, fat:0.3, satFat:0.1, carbs:23, fiber:2.6, sugar:12,
+        vitamins:[{l:"C",v:"8.7مغ"},{l:"B6",v:"0.4مغ"},{l:"فولات",v:"20مكغ"}],
+        minerals:[{l:"بوتاسيوم",v:"358مغ"},{l:"مغنيسيوم",v:"27مغ"}] },
+      { name:"تفاح (بقشره)", emoji:"🍎", cal:52, protein:0.3, fat:0.2, satFat:0, carbs:14, fiber:2.4, sugar:10,
+        vitamins:[{l:"C",v:"4.6مغ"},{l:"K",v:"2.2مكغ"}],
+        minerals:[{l:"بوتاسيوم",v:"107مغ"},{l:"كالسيوم",v:"6مغ"}] },
+      { name:"برتقال", emoji:"🍊", cal:47, protein:0.9, fat:0.1, satFat:0, carbs:12, fiber:2.4, sugar:9.4,
+        vitamins:[{l:"C",v:"53مغ"},{l:"فولات",v:"30مكغ"}],
+        minerals:[{l:"كالسيوم",v:"40مغ"},{l:"بوتاسيوم",v:"181مغ"}] },
+      { name:"تمر (مجفف)", emoji:"🌴", cal:277, protein:2.5, fat:0.4, satFat:0, carbs:75, fiber:6.7, sugar:63,
+        vitamins:[{l:"B6",v:"0.2مغ"}],
+        minerals:[{l:"بوتاسيوم",v:"696مغ"},{l:"مغنيسيوم",v:"54مغ"},{l:"حديد",v:"1مغ"}] },
+      { name:"أفوكادو", emoji:"🥑", cal:160, protein:2, fat:15, satFat:2.1, carbs:8.5, fiber:6.7, sugar:0.7,
+        vitamins:[{l:"K",v:"21مكغ"},{l:"C",v:"10مغ"},{l:"E",v:"2.1مغ"},{l:"فولات",v:"81مكغ"}],
+        minerals:[{l:"بوتاسيوم",v:"485مغ"},{l:"مغنيسيوم",v:"29مغ"}] },
+      { name:"عنب", emoji:"🍇", cal:69, protein:0.7, fat:0.2, satFat:0, carbs:18, fiber:0.9, sugar:16,
+        vitamins:[{l:"C",v:"3.2مغ"},{l:"K",v:"14.6مكغ"}],
+        minerals:[{l:"بوتاسيوم",v:"191مغ"}] },
+      { name:"فراولة", emoji:"🍓", cal:32, protein:0.7, fat:0.3, satFat:0, carbs:7.7, fiber:2, sugar:4.9,
+        vitamins:[{l:"C",v:"58.8مغ"},{l:"فولات",v:"24مكغ"}],
+        minerals:[{l:"بوتاسيوم",v:"153مغ"}] },
+      { name:"مانجو", emoji:"🥭", cal:60, protein:0.8, fat:0.4, satFat:0, carbs:15, fiber:1.6, sugar:13.7,
+        vitamins:[{l:"C",v:"36.4مغ"},{l:"A",v:"54مكغ"}],
+        minerals:[{l:"بوتاسيوم",v:"168مغ"}] },
+      { name:"أناناس", emoji:"🍍", cal:50, protein:0.5, fat:0.1, satFat:0, carbs:13.1, fiber:1.4, sugar:9.9,
+        vitamins:[{l:"C",v:"47.8مغ"},{l:"B6",v:"0.1مغ"}],
+        minerals:[{l:"بوتاسيوم",v:"109مغ"}] },
+      { name:"رمان", emoji:"🍎", cal:83, protein:1.7, fat:1.2, satFat:0.1, carbs:18.7, fiber:4, sugar:13.7,
+        vitamins:[{l:"C",v:"10.2مغ"},{l:"K",v:"16.4مكغ"}],
+        minerals:[{l:"بوتاسيوم",v:"236مغ"}] },
+      { name:"كيوي", emoji:"🥝", cal:61, protein:1.1, fat:0.5, satFat:0, carbs:14.7, fiber:3, sugar:9,
+        vitamins:[{l:"C",v:"92.7مغ"},{l:"K",v:"40.3مكغ"},{l:"E",v:"1.5مغ"}],
+        minerals:[{l:"بوتاسيوم",v:"312مغ"}] },
+      { name:"بطيخ", emoji:"🍉", cal:30, protein:0.6, fat:0.2, satFat:0, carbs:7.6, fiber:0.4, sugar:6.2,
+        vitamins:[{l:"C",v:"8.1مغ"},{l:"A",v:"28مكغ"}],
+        minerals:[{l:"بوتاسيوم",v:"112مغ"}] }
+    ],
+    "مكسرات": [
+      { name:"لوز", emoji:"🌰", cal:579, protein:21, fat:49, satFat:3.7, carbs:22, fiber:12.5, sugar:4.4,
+        vitamins:[{l:"E",v:"25.6مغ"}],
+        minerals:[{l:"مغنيسيوم",v:"270مغ"},{l:"كالسيوم",v:"269مغ"},{l:"بوتاسيوم",v:"733مغ"},{l:"حديد",v:"3.7مغ"}] },
+      { name:"جوز (عين الجمل)", emoji:"🌰", cal:654, protein:15, fat:65, satFat:6.1, carbs:14, fiber:6.7, sugar:2.6,
+        vitamins:[{l:"B6",v:"0.5مغ"},{l:"فولات",v:"98مكغ"}],
+        minerals:[{l:"مغنيسيوم",v:"158مغ"},{l:"بوتاسيوم",v:"441مغ"},{l:"فوسفور",v:"346مغ"}] },
+      { name:"بندق", emoji:"🌰", cal:628, protein:15, fat:61, satFat:4.5, carbs:17, fiber:9.7, sugar:4.3,
+        vitamins:[{l:"E",v:"15مغ"}],
+        minerals:[{l:"مغنيسيوم",v:"163مغ"},{l:"كالسيوم",v:"114مغ"},{l:"بوتاسيوم",v:"680مغ"}] },
+      { name:"كاجو", emoji:"🥜", cal:553, protein:18, fat:44, satFat:7.8, carbs:30, fiber:3.3, sugar:5.9,
+        vitamins:[{l:"K",v:"34مكغ"}],
+        minerals:[{l:"مغنيسيوم",v:"292مغ"},{l:"حديد",v:"6.7مغ"},{l:"زنك",v:"5.8مغ"},{l:"فوسفور",v:"593مغ"}] },
+      { name:"فستق", emoji:"🥜", cal:560, protein:20, fat:45, satFat:5.6, carbs:28, fiber:10, sugar:7.7,
+        vitamins:[{l:"B6",v:"1.7مغ"},{l:"E",v:"2.3مغ"}],
+        minerals:[{l:"بوتاسيوم",v:"1025مغ"},{l:"فوسفور",v:"490مغ"},{l:"مغنيسيوم",v:"121مغ"}] },
+      { name:"فول سوداني", emoji:"🥜", cal:567, protein:26, fat:49, satFat:6.8, carbs:16, fiber:8.5, sugar:4.7,
+        vitamins:[{l:"E",v:"8.3مغ"},{l:"B3",v:"12.1مغ"},{l:"فولات",v:"240مكغ"}],
+        minerals:[{l:"مغنيسيوم",v:"168مغ"},{l:"بوتاسيوم",v:"705مغ"},{l:"فوسفور",v:"376مغ"}] },
+      { name:"بذور شيا", emoji:"⚫", cal:486, protein:17, fat:31, satFat:3.3, carbs:42, fiber:34, sugar:0,
+        vitamins:[{l:"B3",v:"8.8مغ"}],
+        minerals:[{l:"كالسيوم",v:"631مغ"},{l:"مغنيسيوم",v:"335مغ"},{l:"فوسفور",v:"860مغ"}] }
+    ]
+  };
+
+  const CAT_ICONS = { "لحوم ومصادر بروتين":"🥩", "خضروات":"🥦", "فواكه":"🍎", "مكسرات":"🌰" };
+  const MAX_CAL = 654;
+  let currentCategory = "لحوم ومصادر بروتين";
+  let searchTerm = "";
+
+  function showView(name){
+    document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+    if(name !== 'home'){
+      const target = document.getElementById('view-'+name);
+      if(target) target.classList.add('active');
+    }
+    window.scrollTo({top:0, behavior:'smooth'});
+  }
+
+  function renderStatStrip(){
+    const totalItems = Object.values(FOODS).reduce((s,arr)=>s+arr.length,0);
+    const cats = Object.keys(FOODS).length;
+    document.getElementById('stat-strip').innerHTML = `
+      <div><b>${totalItems}</b><span>صنف غذائي</span></div>
+      <div><b>${cats}</b><span>تصنيفات</span></div>
+      <div><b>100%</b><span>بيانات مرجعية</span></div>
+    `;
+  }
+
+  function buildTabs(){
+    const tabsEl = document.getElementById('tabs');
+    tabsEl.innerHTML = '';
+    Object.keys(FOODS).forEach(cat=>{
+      const btn = document.createElement('button');
+      btn.className = 'tab' + (cat===currentCategory ? ' active' : '');
+      btn.innerHTML = `${CAT_ICONS[cat]||''} ${cat} <span class="count">${FOODS[cat].length}</span>`;
+      btn.onclick = ()=>{ currentCategory = cat; buildTabs(); renderFoods(); };
+      tabsEl.appendChild(btn);
+    });
+  }
+
+  function badgesFor(item){
+    const b = [];
+    if(item.cal >= 400) b.push('<span class="badge energy">🔥 مرتفع الطاقة</span>');
+    else if(item.cal <= 40) b.push('<span class="badge light">🥗 منخفض السعرات</span>');
+    if(item.protein >= 20) b.push('<span class="badge protein">💪 غني بالبروتين</span>');
+    if(item.fiber >= 6) b.push('<span class="badge light">🌾 غني بالألياف</span>');
+    if(item.sugar >= 15) b.push('<span class="badge sugar">🍯 مرتفع السكريات</span>');
+    return b.join('');
+  }
+
+  function renderFoods(){
+    const grid = document.getElementById('food-grid');
+    const noResults = document.getElementById('no-results');
+    grid.innerHTML = '';
+
+    let itemsToShow = [];
+    if(searchTerm.trim() !== ''){
+      Object.keys(FOODS).forEach(cat=>{
+        FOODS[cat].forEach(item=>{
+          if(item.name.includes(searchTerm.trim())) itemsToShow.push({item, cat});
+        });
+      });
+    } else {
+      itemsToShow = FOODS[currentCategory].map(item=>({item, cat: currentCategory}));
+    }
+
+    document.getElementById('tabs').style.display = searchTerm.trim() !== '' ? 'none' : 'flex';
+
+    if(itemsToShow.length === 0){ noResults.style.display = 'block'; return; }
+    noResults.style.display = 'none';
+
+    itemsToShow.forEach(({item, cat}, idx)=>{
+      const proteinCal = item.protein*4, fatCal = item.fat*9, carbsCal = item.carbs*4;
+      const totalCal = proteinCal+fatCal+carbsCal || 1;
+      const pP = Math.round((proteinCal/totalCal)*100);
+      const pF = Math.round((fatCal/totalCal)*100);
+      const energyPct = Math.min(100, Math.round((item.cal/MAX_CAL)*100));
+      const uid = (cat+item.name).replace(/[^a-zA-Z0-9\u0600-\u06FF]/g,'');
+
+      const card = document.createElement('div');
+      card.className = 'food-card';
+      card.style.animationDelay = (idx * 0.04) + 's';
+      card.innerHTML = `
+        <div class="food-top">
+          <div class="food-head">
+            <div class="food-emoji">${item.emoji}</div>
+            <div>
+              <div class="food-name">${item.name}</div>
+              <div class="food-cat">${CAT_ICONS[cat]||''} ${cat}</div>
+            </div>
+          </div>
+
+          <div class="badge-row">${badgesFor(item)}</div>
+
+          <div class="energy-bar-row">
+            <div class="energy-bar-label"><span>الطاقة</span><span><b>${item.cal}</b> سعرة/100غ</span></div>
+            <div class="energy-bar-track"><div class="energy-bar-fill" style="width:${energyPct}%"></div></div>
+          </div>
+
+          <div class="ring-row">
+            <div class="ring" style="background: conic-gradient(var(--red-bright) 0% ${pP}%, var(--pink) ${pP}% ${pP+pF}%, var(--red-deep) ${pP+pF}% 100%);">
+              <div class="ring-inner"><b>${pP}%</b><small>بروتين</small></div>
+            </div>
+            <div class="legend">
+              <div><span class="dot protein"></span> بروتين: ${item.protein}غ</div>
+              <div><span class="dot fat"></span> دسم: ${item.fat}غ (مشبع ${item.satFat}غ)</div>
+              <div><span class="dot carbs"></span> كربوهيدرات: ${item.carbs}غ</div>
+            </div>
+          </div>
+
+          <div class="macro-mini">
+            <span>ألياف: <b>${item.fiber}غ</b></span>
+            <span>سكريات: <b>${item.sugar}غ</b></span>
+          </div>
+        </div>
+
+        <button class="toggle-btn" onclick="toggleDetail('${uid}')" id="btn-${uid}">عرض الفيتامينات والمعادن الكاملة ▾</button>
+        <div class="detail-panel" id="panel-${uid}">
+          <div class="detail-title">الفيتامينات</div>
+          <div class="chip-row">${item.vitamins.map(v=>`<span class="chip">${v.l}: ${v.v}</span>`).join('') || '<span class="chip alt">لا توجد كمية تُذكر</span>'}</div>
+          <div class="detail-title">المعادن</div>
+          <div class="chip-row">${item.minerals.map(m=>`<span class="chip alt">${m.l}: ${m.v}</span>`).join('') || '<span class="chip alt">لا توجد كمية تُذكر</span>'}</div>
+        </div>
+      `;
+      grid.appendChild(card);
+    });
+  }
+
+  function toggleDetail(uid){
+    const panel = document.getElementById('panel-'+uid);
+    const btn = document.getElementById('btn-'+uid);
+    const open = panel.classList.toggle('open');
+    btn.textContent = open ? 'إخفاء التفاصيل ▴' : 'عرض الفيتامينات والمعادن الكاملة ▾';
+  }
+
+  document.getElementById('search').addEventListener('input', (e)=>{
+    searchTerm = e.target.value;
+    renderFoods();
+  });
+
+  function calcBMI(){
+    const w = parseFloat(document.getElementById('weight').value);
+    const h = parseFloat(document.getElementById('height').value);
+    if(!w || !h || w<=0 || h<=0){ alert('من فضلك أدخل وزن وطول صحيحين'); return; }
+    const hm = h/100;
+    const bmi = w / (hm*hm);
+    const bmiRounded = Math.round(bmi*10)/10;
+
+    let label, colorBg, colorText, pct;
+    if(bmi < 18.5){ label='نقص في الوزن'; colorBg='#FDF0F2'; colorText='#C8102E'; pct = (bmi/18.5)*12.5; }
+    else if(bmi < 25){ label='وزن طبيعي'; colorBg='#FBE7EA'; colorText='#8B0000'; pct = 12.5 + ((bmi-18.5)/6.5)*37.5; }
+    else if(bmi < 30){ label='زيادة في الوزن'; colorBg='#F3B6C0'; colorText='#7A0C1F'; pct = 50 + ((bmi-25)/5)*25; }
+    else { label='سمنة'; colorBg='#7A0C1F'; colorText='#fff'; pct = Math.min(75 + ((bmi-30)/10)*25, 100); }
+
+    document.getElementById('bmi-placeholder').style.display = 'none';
+    document.getElementById('bmi-result').style.display = 'block';
+    document.getElementById('bmi-value').textContent = bmiRounded;
+    const labelEl = document.getElementById('bmi-label');
+    labelEl.textContent = label; labelEl.style.background = colorBg; labelEl.style.color = colorText;
+    document.getElementById('gauge-marker').style.right = pct + '%';
+  }
+
+  // ===== Gender toggle helper (used by bmr / bf / iw views) =====
+  const genderState = { bmr:'male', bf:'male', iw:'male' };
+  function setGender(prefix, value){
+    genderState[prefix] = value;
+    document.getElementById(prefix+'-male').classList.toggle('active', value==='male');
+    document.getElementById(prefix+'-female').classList.toggle('active', value==='female');
+  }
+
+  // ===== BMR / TDEE =====
+  function calcBMR(){
+    const w = parseFloat(document.getElementById('bmr-weight').value);
+    const h = parseFloat(document.getElementById('bmr-height').value);
+    const a = parseFloat(document.getElementById('bmr-age').value);
+    const factor = parseFloat(document.getElementById('bmr-activity').value);
+    if(!w || !h || !a || w<=0 || h<=0 || a<=0){ alert('من فضلك أدخل جميع القيم بشكل صحيح'); return; }
+
+    const bmr = genderState.bmr === 'male'
+      ? (10*w + 6.25*h - 5*a + 5)
+      : (10*w + 6.25*h - 5*a - 161);
+    const tdee = bmr * factor;
+
+    document.getElementById('bmr-placeholder').style.display = 'none';
+    document.getElementById('bmr-result').style.display = 'block';
+    document.getElementById('bmr-value').textContent = Math.round(tdee);
+    document.getElementById('bmr-base').textContent = Math.round(bmr);
+    document.getElementById('bmr-loss').textContent = Math.round(tdee-500);
+    document.getElementById('bmr-gain').textContent = Math.round(tdee+500);
+  }
+
+  // ===== Compare Foods =====
+  function populateCompareSelects(){
+    const a = document.getElementById('compare-a');
+    const b = document.getElementById('compare-b');
+    [a,b].forEach(sel=>{
+      sel.innerHTML='';
+      Object.keys(FOODS).forEach(cat=>{
+        const group = document.createElement('optgroup');
+        group.label = (CAT_ICONS[cat]||'') + ' ' + cat;
+        FOODS[cat].forEach(item=>{
+          const opt = document.createElement('option');
+          opt.value = item.name; opt.textContent = item.emoji+' '+item.name;
+          group.appendChild(opt);
+        });
+        sel.appendChild(group);
+      });
+    });
+    b.selectedIndex = 1;
+  }
+
+  function findFood(name){
+    for(const cat in FOODS){
+      const found = FOODS[cat].find(i=>i.name===name);
+      if(found) return {...found, cat};
+    }
+    return null;
+  }
+
+  function doCompare(){
+    const nameA = document.getElementById('compare-a').value;
+    const nameB = document.getElementById('compare-b').value;
+    const fa = findFood(nameA), fb = findFood(nameB);
+    if(!fa || !fb) return;
+
+    const rows = [
+      {l:'السعرات (سعرة)', a:fa.cal, b:fb.cal},
+      {l:'بروتين (غ)', a:fa.protein, b:fb.protein},
+      {l:'دسم (غ)', a:fa.fat, b:fb.fat},
+      {l:'دسم مشبع (غ)', a:fa.satFat, b:fb.satFat},
+      {l:'كربوهيدرات (غ)', a:fa.carbs, b:fb.carbs},
+      {l:'ألياف (غ)', a:fa.fiber, b:fb.fiber},
+      {l:'سكريات (غ)', a:fa.sugar, b:fb.sugar}
+    ];
+
+    let html = `<table class="compare-table"><thead><tr>
+      <th></th>
+      <th><div class="compare-emoji-head">${fa.emoji}</div>${fa.name}</th>
+      <th><div class="compare-emoji-head">${fb.emoji}</div>${fb.name}</th>
+    </tr></thead><tbody>`;
+
+    rows.forEach(r=>{
+      const aHi = r.a > r.b, bHi = r.b > r.a;
+      html += `<tr>
+        <td class="lbl">${r.l}</td>
+        <td class="${aHi?'hi':''}">${r.a}${aHi?' ▲':''}</td>
+        <td class="${bHi?'hi':''}">${r.b}${bHi?' ▲':''}</td>
+      </tr>`;
+    });
+    html += '</tbody></table>';
+    document.getElementById('compare-result').innerHTML = html;
+  }
+
+  // ===== Water Calculator =====
+  function calcWater(){
+    const w = parseFloat(document.getElementById('water-weight').value);
+    const factor = parseFloat(document.getElementById('water-activity').value);
+    if(!w || w<=0){ alert('من فضلك أدخل وزناً صحيحاً'); return; }
+    const liters = (w*factor)/1000;
+    document.getElementById('water-placeholder').style.display='none';
+    document.getElementById('water-result').style.display='block';
+    document.getElementById('water-value').textContent = liters.toFixed(1);
+    document.getElementById('water-cups').textContent = `≈ ${Math.round((liters*1000)/240)} كوب (240 مل) يومياً`;
+  }
+
+  // ===== Body Fat % (Deurenberg estimate) =====
+  function calcBodyFat(){
+    const w = parseFloat(document.getElementById('bf-weight').value);
+    const h = parseFloat(document.getElementById('bf-height').value);
+    const a = parseFloat(document.getElementById('bf-age').value);
+    if(!w || !h || !a || w<=0 || h<=0 || a<=0){ alert('من فضلك أدخل جميع القيم بشكل صحيح'); return; }
+    const bmi = w/((h/100)**2);
+    const sexFactor = genderState.bf === 'male' ? 1 : 0;
+    let bf = (1.20*bmi) + (0.23*a) - (10.8*sexFactor) - 5.4;
+    bf = Math.max(2, Math.round(bf*10)/10);
+
+    let label, colorBg, colorText;
+    const isMale = genderState.bf === 'male';
+    if((isMale && bf<6) || (!isMale && bf<14)){ label='منخفضة جداً'; colorBg='#FDF0F2'; colorText='#C8102E'; }
+    else if((isMale && bf<18) || (!isMale && bf<25)){ label='رياضية / طبيعية'; colorBg='#FBE7EA'; colorText='#8B0000'; }
+    else if((isMale && bf<25) || (!isMale && bf<32)){ label='متوسطة'; colorBg='#F3B6C0'; colorText='#7A0C1F'; }
+    else { label='مرتفعة'; colorBg='#7A0C1F'; colorText='#fff'; }
+
+    document.getElementById('bf-placeholder').style.display='none';
+    document.getElementById('bf-result').style.display='block';
+    document.getElementById('bf-value').textContent = bf + '%';
+    const labelEl = document.getElementById('bf-label');
+    labelEl.textContent = label; labelEl.style.background=colorBg; labelEl.style.color=colorText;
+  }
+
+  // ===== Ideal Weight (Devine formula + healthy BMI range) =====
+  function calcIdeal(){
+    const h = parseFloat(document.getElementById('iw-height').value);
+    if(!h || h<=0){ alert('من فضلك أدخل طولاً صحيحاً'); return; }
+    const inchesOver = Math.max(0, (h-152.4)/2.54);
+    const base = genderState.iw === 'male' ? 50 : 45.5;
+    const ideal = base + 2.3*inchesOver;
+    const hm = h/100;
+    const rangeLow = 18.5*hm*hm, rangeHigh = 24.9*hm*hm;
+
+    document.getElementById('iw-placeholder').style.display='none';
+    document.getElementById('iw-result').style.display='block';
+    document.getElementById('iw-value').textContent = Math.round(ideal);
+    document.getElementById('iw-range').textContent = `المدى الصحي المقبول: ${rangeLow.toFixed(0)} - ${rangeHigh.toFixed(0)} كجم`;
+  }
+
+  // ===== Navbar scroll shadow =====
+  window.addEventListener('scroll', ()=>{
+    document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 8);
+  });
+
+  renderStatStrip();
+  buildTabs();
+  renderFoods();
+  populateCompareSelects();
+</script>
+</body>
+</html>
